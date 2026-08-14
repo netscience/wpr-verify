@@ -6,7 +6,7 @@ Companion code for
 > *Word-Processing-based Routing: A Fault-tolerant Routing Scheme for Cayley
 > Graphs*.
 
-It reproduces results reported in tables 8 and 9 of the paper.
+It reproduces results reported in tables 5, 8 and 9 of the paper.
 
 ## Contents
 
