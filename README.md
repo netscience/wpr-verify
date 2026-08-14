@@ -70,7 +70,7 @@ nauty) and tests whether it acts transitively on the edge set:
 gap -q edge_transitivity.g
 ```
 
-This is a separate tool on purpose. Aut(Γ) can be strictly larger than the
+This is a separate tool on purpose. $Aut(\Gamma)$ can be strictly larger than the
 group of automorphisms of G preserving S, so a group-theoretic shortcut would
 not be sound, and a local invariant such as counting short cycles per edge can
 only ever certify *non*-equivalence, never equivalence.
