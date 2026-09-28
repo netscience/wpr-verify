@@ -7,6 +7,13 @@ date-released: 2026-09-28
 license: MIT
 repository-code: "https://github.com/netscience/wpr-verify"
 doi: 10.5281/zenodo.21929581
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23005545
+    description: "Version 2.0.0"
+  - type: doi
+    value: 10.5281/zenodo.21929581
+    description: "Concept DOI (all versions)"
 authors:
   - family-names: Aguirre-Guerrero
     given-names: Daniela
