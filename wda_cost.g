@@ -572,7 +572,10 @@ WDA_Report := function()
   Append(out, "       16799 rules (60 s), kbprog's diff1/diff2 have 2855/4278 states and gpmakefsa builds the 545-state word\n");
   Append(out, "       acceptor, but the general multiplier keeps being found incorrect (word differences missing from diff2) and\n");
   Append(out, "       gpmakefsa stops at kbmag's word-difference limit; with the limit raised to 200000 (kbmag_patch/bin) it was\n");
-  Append(out, "       still adding word differences after 25 min (multiplier > 47000 states) and was stopped.\n");
+  Append(out, "       still adding word differences after 35 min (multiplier 50182 states) and was stopped.  gpminkb run on\n");
+  Append(out, "       that partial result (kbmag_out/ST8.diff1c, ST8.diff2c) gives a correct diff1 machine with 2855 states\n");
+  Append(out, "       (= the brute-force diff1c below) and a diff2c with 7406 states, which is only a lower bound because\n");
+  Append(out, "       the multiplier it was derived from was still incomplete (brute force: 13359).\n");
   Append(out, "  PC8: Knuth-Bendix exceeds maxeqns (32767) with the defaults; with large + maxwdiffs 200000 it completes with a\n");
   Append(out, "       confluent system of 37964 rules (375 s), diff1/diff2 with 15515/19089 states, and gpmakefsa then crashes\n");
   Append(out, "       (SIGBUS) building the word acceptor from diff2; with -diff1 it builds the 5671-state word acceptor but\n");
