@@ -33,3 +33,9 @@ ST8,star ST(p),8,40320,7,7,false,,false,,,,,,,61.26,61.23,,0.57,,[patched gpaxio
 ST8,star ST(p),8,40320,7,7,true,,false,,,,,,,64.02,63.99,,0.55,,[patched gpaxioms] Sym_8; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
 PC8,pancake PC(p),8,40320,7,7,false,,false,,,,,,,68.74,68.73,,0.40,,[patched gpaxioms] Sym_8; prefix reversals r_2..r_8; presentation via IsomorphismFpGroupByGenerators
 PC8,pancake PC(p),8,40320,7,7,true,,false,,,,,,,0.06,0.02,,0.46,,[patched gpaxioms] Sym_8; prefix reversals r_2..r_8; presentation via IsomorphismFpGroupByGenerators
+ST8,star ST(p),8,40320,7,7,false,,false,,,,,,,73.08,73.06,,0.58,,[patched gpaxioms] Sym_8; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
+ST8,star ST(p),8,40320,7,7,true,,false,,,,,,,73.49,73.47,,0.64,,[patched gpaxioms] Sym_8; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
+ST8,star ST(p),8,40320,7,,true,200000,timeout,,,,,,,>600,>600,,,,killed after 600 s wall clock; see logs/ST8_large_mwd200000.log
+PC8,pancake PC(p),8,40320,7,7,false,,false,,,,,,,71.84,71.82,,0.42,,[patched gpaxioms] Sym_8; prefix reversals r_2..r_8; presentation via IsomorphismFpGroupByGenerators
+PC8,pancake PC(p),8,40320,7,7,true,,false,,,,,,,0.04,0.02,,0.42,,[patched gpaxioms] Sym_8; prefix reversals r_2..r_8; presentation via IsomorphismFpGroupByGenerators
+PC8,pancake PC(p),8,40320,7,7,true,200000,false,,,,,,,372.93,372.90,,0.42,,[maxwdiffs=200000] [patched gpaxioms] Sym_8; prefix reversals r_2..r_8; presentation via IsomorphismFpGroupByGenerators

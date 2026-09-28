@@ -1,6 +1,6 @@
 Shortlex automatic structures of the Cayley-graph groups (GAP 4.15.1 + kbmag 1.5.11)
 Architecture: aarch64-apple-darwin25-default64-kv10
-Machine: Apple M4; Darwin 25.2.0 arm64; run started 2026-09-27 19:57:07
+Machine: Apple M4; Darwin 25.2.0 arm64; run started 2026-09-27 20:39:03
 Wall-clock cap per computation: 600 s.  Script: wda_cost.g (driver run_wda.py); raw data: wda_cost.csv; logs: logs/
 kbmag temporary files are written to the short relative path wdatmp/<case>: with GAP's default
 temporary path (~70 characters) the gpaxioms program overflows its 100-byte file-name buffers on
@@ -8,40 +8,40 @@ relators of length >~ 25 and AutomaticStructure returns false (observed for Bore
 Rows marked [patched gpaxioms] were computed with kbmag_patch/bin (gpaxioms rebuilt from the package
 sources with 4096-byte buffers by build_patch.sh; needed for relator sides of >= ~45 letters, i.e. T100).
 
-case     family                        n=|G|  |S|  alph  success  WA   diff1  diff2  diff2c  GM     seconds  t_autgroup  large  mwd  sizeOK  
----------------------------------------------------------------------------------------------------------------------------------------------
-Q4       hypercube Q_k                    16    4     4  true       5     11     11      11     21     0.08        0.05  false       true    
-Q6       hypercube Q_k                    64    6     6  true       7     22     22      22     43     0.08        0.03  false       true    
-Q8       hypercube Q_k                   256    8     8  true       9     37     37      37     73     0.10        0.04  false       true    
-Q10      hypercube Q_k                  1024   10    10  true      11     56     56      56    111     0.18        0.10  false       true    
-Q12      hypercube Q_k                  4096   12    12  true      13     79     79      79    157     0.61        0.49  false       true    
-Q14      hypercube Q_k                 16384   14    14  true      15    106    106     106    211     3.14        2.98  false       true    
-Q16      hypercube Q_k                 65536   16    16  true      17    137    137     137    273    18.85       18.71  false       true    
-T4       torus Z_m x Z_m                  16    2     4  true       5     11     11      11     25     0.06        0.03  false       true    
-T6       torus Z_m x Z_m                  36    2     4  true       9     13     13      13     41     0.08        0.04  false       true    
-T8       torus Z_m x Z_m                  64    2     4  true      13     15     15      15     57     0.08        0.05  false       true    
-T14      torus Z_m x Z_m                 196    2     4  true      25     21     21      21    105     0.11        0.07  false       true    
-T20      torus Z_m x Z_m                 400    2     4  true      37     27     27      27    153     0.12        0.08  false       true    
-T50      torus Z_m x Z_m                2500    2     4  true      97     57     57      57    393     0.29        0.25  false       true    
-T100     torus Z_m x Z_m               10000    2     4  true     197    107    107     107    793     1.31        1.27  false       true    
-C20      circulant C_20(1;2)              20    2     4  true      10     12     20      20     54     0.09        0.06  false       true    
-Borel47  Borel(47;23)                   1081    2     4  true     263    486    575     575   2203     0.88        0.67  false       true    
-BS4      bubble-sort BS(p)                24    3     3  true       7      7      9       9     26     0.07        0.04  false       true    
-BS5      bubble-sort BS(p)               120    4     4  true      11     11     14      14     55     0.09        0.05  false       true    
-BS6      bubble-sort BS(p)               720    5     5  true      16     16     20      20    101     0.11        0.07  false       true    
-ST4      star ST(p)                       24    3     3  true       9     11     14      14     42     0.08        0.05  false       true    
-ST5      star ST(p)                      120    4     4  true      24     32     57      57    230     0.15        0.11  false       true    
-ST6      star ST(p)                      720    5     5  true      67    115    310     310   1318     0.53        0.42  false       true    
-CT4      complete-transposition CT(p)     24    6     6  true       6     18     18      18     54     0.06        0.03  false       true    
-PC4      pancake PC(p)                    24    3     3  true      12     21     23      23     46     0.08        0.05  false       true    
-PC5      pancake PC(p)                   120    4     4  true      38     84    100     100    282     0.13        0.08  false       true    
-PC6      pancake PC(p)                   720    5     5  true     166    413    553     553   2051     1.10        0.90  false       true    
-BS7      bubble-sort BS(p)              5040    6     6  true      22     22     27      27    168     0.15        0.10  false       true    
-ST7      star ST(p)                     5040    6     6  true     191    524   1966    1966   9365    51.19       43.09  false       true    
-PC7      pancake PC(p)                  5040    6     6  true     904   2322   3408    3408  17029   250.93      216.08  false       true    
-BS8      bubble-sort BS(p)             40320    7     7  true      29     29     35      35    260     0.26        0.21  false       true    
-ST8      star ST(p)                    40320    7     7  false                                        64.02       63.99  true                
-PC8      pancake PC(p)                 40320    7     7  false                                         0.06        0.02  true                
+case     family                        n=|G|  |S|  alph  success  WA   diff1  diff2  diff2c  GM     seconds  t_autgroup  large  mwd     sizeOK  
+------------------------------------------------------------------------------------------------------------------------------------------------
+Q4       hypercube Q_k                    16    4     4  true       5     11     11      11     21     0.08        0.05  false          true    
+Q6       hypercube Q_k                    64    6     6  true       7     22     22      22     43     0.08        0.03  false          true    
+Q8       hypercube Q_k                   256    8     8  true       9     37     37      37     73     0.10        0.04  false          true    
+Q10      hypercube Q_k                  1024   10    10  true      11     56     56      56    111     0.18        0.10  false          true    
+Q12      hypercube Q_k                  4096   12    12  true      13     79     79      79    157     0.61        0.49  false          true    
+Q14      hypercube Q_k                 16384   14    14  true      15    106    106     106    211     3.14        2.98  false          true    
+Q16      hypercube Q_k                 65536   16    16  true      17    137    137     137    273    18.85       18.71  false          true    
+T4       torus Z_m x Z_m                  16    2     4  true       5     11     11      11     25     0.06        0.03  false          true    
+T6       torus Z_m x Z_m                  36    2     4  true       9     13     13      13     41     0.08        0.04  false          true    
+T8       torus Z_m x Z_m                  64    2     4  true      13     15     15      15     57     0.08        0.05  false          true    
+T14      torus Z_m x Z_m                 196    2     4  true      25     21     21      21    105     0.11        0.07  false          true    
+T20      torus Z_m x Z_m                 400    2     4  true      37     27     27      27    153     0.12        0.08  false          true    
+T50      torus Z_m x Z_m                2500    2     4  true      97     57     57      57    393     0.29        0.25  false          true    
+T100     torus Z_m x Z_m               10000    2     4  true     197    107    107     107    793     1.31        1.27  false          true    
+C20      circulant C_20(1;2)              20    2     4  true      10     12     20      20     54     0.09        0.06  false          true    
+Borel47  Borel(47;23)                   1081    2     4  true     263    486    575     575   2203     0.88        0.67  false          true    
+BS4      bubble-sort BS(p)                24    3     3  true       7      7      9       9     26     0.07        0.04  false          true    
+BS5      bubble-sort BS(p)               120    4     4  true      11     11     14      14     55     0.09        0.05  false          true    
+BS6      bubble-sort BS(p)               720    5     5  true      16     16     20      20    101     0.11        0.07  false          true    
+ST4      star ST(p)                       24    3     3  true       9     11     14      14     42     0.08        0.05  false          true    
+ST5      star ST(p)                      120    4     4  true      24     32     57      57    230     0.15        0.11  false          true    
+ST6      star ST(p)                      720    5     5  true      67    115    310     310   1318     0.53        0.42  false          true    
+CT4      complete-transposition CT(p)     24    6     6  true       6     18     18      18     54     0.06        0.03  false          true    
+PC4      pancake PC(p)                    24    3     3  true      12     21     23      23     46     0.08        0.05  false          true    
+PC5      pancake PC(p)                   120    4     4  true      38     84    100     100    282     0.13        0.08  false          true    
+PC6      pancake PC(p)                   720    5     5  true     166    413    553     553   2051     1.10        0.90  false          true    
+BS7      bubble-sort BS(p)              5040    6     6  true      22     22     27      27    168     0.15        0.10  false          true    
+ST7      star ST(p)                     5040    6     6  true     191    524   1966    1966   9365    51.19       43.09  false          true    
+PC7      pancake PC(p)                  5040    6     6  true     904   2322   3408    3408  17029   250.93      216.08  false          true    
+BS8      bubble-sort BS(p)             40320    7     7  true      29     29     35      35    260     0.26        0.21  false          true    
+ST8      star ST(p)                    40320    7        timeout                                       >600        >600  true   200000          
+PC8      pancake PC(p)                 40320    7     7  false                                       372.93      372.90  true   200000          
 
 Columns
   n=|G|      group order (verified by coset enumeration of the fp group, and by Size(R) = number of words accepted by the word acceptor -> sizeOK)
@@ -87,5 +87,92 @@ Notes per case
   ST7: [patched gpaxioms] Sym_7; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
   PC7: [patched gpaxioms] Sym_7; prefix reversals r_2..r_7; presentation via IsomorphismFpGroupByGenerators
   BS8: [patched gpaxioms] Sym_8; adjacent transpositions; Coxeter presentation A_7
-  ST8: [patched gpaxioms] Sym_8; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
-  PC8: [patched gpaxioms] Sym_8; prefix reversals r_2..r_8; presentation via IsomorphismFpGroupByGenerators
+  ST8: killed after 600 s wall clock; see logs/ST8_large_mwd200000.log
+  PC8: [maxwdiffs=200000] [patched gpaxioms] Sym_8; prefix reversals r_2..r_8; presentation via IsomorphismFpGroupByGenerators
+
+Cases kbmag did not complete (ST8, PC8; see kbmag_out/*.pipeline.log)
+  ST8: AutomaticStructure returns false (default and large): Knuth-Bendix completes with a confluent system of
+       16799 rules (60 s), kbprog's diff1/diff2 have 2855/4278 states and gpmakefsa builds the 545-state word
+       acceptor, but the general multiplier keeps being found incorrect (word differences missing from diff2) and
+       gpmakefsa stops at kbmag's word-difference limit; with the limit raised to 200000 (kbmag_patch/bin) it was
+       still adding word differences after 25 min (multiplier > 47000 states) and was stopped.
+  PC8: Knuth-Bendix exceeds maxeqns (32767) with the defaults; with large + maxwdiffs 200000 it completes with a
+       confluent system of 37964 rules (375 s), diff1/diff2 with 15515/19089 states, and gpmakefsa then crashes
+       (SIGBUS) building the word acceptor from diff2; with -diff1 it builds the 5671-state word acceptor but
+       did not finish the multiplier within the time budget.
+  The word acceptors kbmag wrote for both cases (kbmag_out/ST8.wa, PC8.wa) accept exactly the 40320 shortlex
+  normal forms (wda_wacheck.g), and wda_brute.g computes WA / diff1c / diff2c for them without kbmag:
+       ST8: WA = 545, diff1c = 2855, diff2c = 13359;   PC8: WA = 5671, diff1c = 15515, diff2c = 24460.
+  (wda_brute.g reproduces kbmag's WA, diff1 and diff2c exactly on all 30 completed cases, see below.)
+
+Independent verification of the word acceptors (wda_verify.g, wda_wacheck.g)
+  wda_verify.g run 2026-09-27 20:15
+  Q4: |G| = 16, WA states = 5, accepted words = 16 (Size(R) = 16), BFS normal forms = 16, max length = 4, languages identical: true -> true
+  Q6: |G| = 64, WA states = 7, accepted words = 64 (Size(R) = 64), BFS normal forms = 64, max length = 6, languages identical: true -> true
+  Q8: |G| = 256, WA states = 9, accepted words = 256 (Size(R) = 256), BFS normal forms = 256, max length = 8, languages identical: true -> true
+  Q10: |G| = 1024, WA states = 11, accepted words = 1024 (Size(R) = 1024), BFS normal forms = 1024, max length = 10, languages identical: true -> true
+  Q12: |G| = 4096, WA states = 13, accepted words = 4096 (Size(R) = 4096), BFS normal forms = 4096, max length = 12, languages identical: true -> true
+  T4: |G| = 16, WA states = 5, accepted words = 16 (Size(R) = 16), BFS normal forms = 16, max length = 4, languages identical: true -> true
+  T6: |G| = 36, WA states = 9, accepted words = 36 (Size(R) = 36), BFS normal forms = 36, max length = 6, languages identical: true -> true
+  T8: |G| = 64, WA states = 13, accepted words = 64 (Size(R) = 64), BFS normal forms = 64, max length = 8, languages identical: true -> true
+  T14: |G| = 196, WA states = 25, accepted words = 196 (Size(R) = 196), BFS normal forms = 196, max length = 14, languages identical: true -> true
+  T20: |G| = 400, WA states = 37, accepted words = 400 (Size(R) = 400), BFS normal forms = 400, max length = 20, languages identical: true -> true
+  T50: |G| = 2500, WA states = 97, accepted words = 2500 (Size(R) = 2500), BFS normal forms = 2500, max length = 50, languages identical: true -> true
+  T100: |G| = 10000, WA states = 197, accepted words = 10000 (Size(R) = 10000), BFS normal forms = 10000, max length = 100, languages identical: true -> true
+  C20: |G| = 20, WA states = 10, accepted words = 20 (Size(R) = 20), BFS normal forms = 20, max length = 5, languages identical: true -> true
+  Borel47: |G| = 1081, WA states = 263, accepted words = 1081 (Size(R) = 1081), BFS normal forms = 1081, max length = 13, languages identical: true -> true
+  BS4: |G| = 24, WA states = 7, accepted words = 24 (Size(R) = 24), BFS normal forms = 24, max length = 6, languages identical: true -> true
+  BS5: |G| = 120, WA states = 11, accepted words = 120 (Size(R) = 120), BFS normal forms = 120, max length = 10, languages identical: true -> true
+  BS6: |G| = 720, WA states = 16, accepted words = 720 (Size(R) = 720), BFS normal forms = 720, max length = 15, languages identical: true -> true
+  ST4: |G| = 24, WA states = 9, accepted words = 24 (Size(R) = 24), BFS normal forms = 24, max length = 4, languages identical: true -> true
+  ST5: |G| = 120, WA states = 24, accepted words = 120 (Size(R) = 120), BFS normal forms = 120, max length = 6, languages identical: true -> true
+  ST6: |G| = 720, WA states = 67, accepted words = 720 (Size(R) = 720), BFS normal forms = 720, max length = 7, languages identical: true -> true
+  CT4: |G| = 24, WA states = 6, accepted words = 24 (Size(R) = 24), BFS normal forms = 24, max length = 3, languages identical: true -> true
+  PC4: |G| = 24, WA states = 12, accepted words = 24 (Size(R) = 24), BFS normal forms = 24, max length = 4, languages identical: true -> true
+  PC5: |G| = 120, WA states = 38, accepted words = 120 (Size(R) = 120), BFS normal forms = 120, max length = 5, languages identical: true -> true
+  PC6: |G| = 720, WA states = 166, accepted words = 720 (Size(R) = 720), BFS normal forms = 720, max length = 7, languages identical: true -> true
+  BS7: |G| = 5040, WA states = 22, accepted words = 5040 (Size(R) = 5040), BFS normal forms = 5040, max length = 21, languages identical: true -> true
+  ST7: |G| = 5040, WA states = 191, accepted words = 5040 (Size(R) = 5040), BFS normal forms = 5040, max length = 9, languages identical: true -> true
+  wda_verify.g run 2026-09-27 20:19 (second pass)
+  Q14: |G| = 16384, WA states = 15, accepted words = 16384 (Size(R) = 16384), BFS normal forms = 16384, max length = 14, languages identical: true -> true
+  Q16: |G| = 65536, WA states = 17, accepted words = 65536 (Size(R) = 65536), BFS normal forms = 65536, max length = 16, languages identical: true -> true
+  PC7: |G| = 5040, WA states = 904, accepted words = 5040 (Size(R) = 5040), BFS normal forms = 5040, max length = 8, languages identical: true -> true
+  wda_wacheck.g run 2026-09-27 20:37
+  ST8: kbmag acceptor kbmag_out/ST8.wa with 545 states accepts 40320 words; BFS normal forms = 40320, max length = 10, languages identical: true -> true
+  PC8: kbmag acceptor kbmag_out/PC8.wa with 5671 states accepts 40320 words; BFS normal forms = 40320, max length = 9, languages identical: true -> true
+
+Brute-force WA / diff1c / diff2c without kbmag (wda_brute.g)
+  wda_brute.g run 2026-09-27 20:34 validation: case, |G|, letters, max NF length, minimal rules; brute-force WA / diff1c / diff2c; kbmag WA / diff1 / diff2c from wda_cost.csv
+  Q4: |G| = 16, letters = 4, max NF length = 4, minimal rules = 10; brute force WA = 5, diff1c = 11, diff2c = 11 (0.05 s); kbmag WA = 5, diff1 = 11, diff2c = 11 -> agreement: true
+  Q8: |G| = 256, letters = 8, max NF length = 8, minimal rules = 36; brute force WA = 9, diff1c = 37, diff2c = 37 (0.06 s); kbmag WA = 9, diff1 = 37, diff2c = 37 -> agreement: true
+  T6: |G| = 36, letters = 4, max NF length = 6, minimal rules = 12; brute force WA = 9, diff1c = 13, diff2c = 13 (0.01 s); kbmag WA = 9, diff1 = 13, diff2c = 13 -> agreement: true
+  T20: |G| = 400, letters = 4, max NF length = 20, minimal rules = 12; brute force WA = 37, diff1c = 27, diff2c = 27 (0.01 s); kbmag WA = 37, diff1 = 27, diff2c = 27 -> agreement: true
+  C20: |G| = 20, letters = 4, max NF length = 5, minimal rules = 15; brute force WA = 10, diff1c = 12, diff2c = 20 (0.01 s); kbmag WA = 10, diff1 = 12, diff2c = 20 -> agreement: true
+  Borel47: |G| = 1081, letters = 4, max NF length = 13, minimal rules = 417; brute force WA = 263, diff1c = 486, diff2c = 575 (0.02 s); kbmag WA = 263, diff1 = 486, diff2c = 575 -> agreement: true
+  BS4: |G| = 24, letters = 3, max NF length = 6, minimal rules = 7; brute force WA = 7, diff1c = 7, diff2c = 9 (0.00 s); kbmag WA = 7, diff1 = 7, diff2c = 9 -> agreement: true
+  BS6: |G| = 720, letters = 5, max NF length = 15, minimal rules = 21; brute force WA = 16, diff1c = 16, diff2c = 20 (0.02 s); kbmag WA = 16, diff1 = 16, diff2c = 20 -> agreement: true
+  ST4: |G| = 24, letters = 3, max NF length = 4, minimal rules = 13; brute force WA = 9, diff1c = 11, diff2c = 14 (0.00 s); kbmag WA = 9, diff1 = 11, diff2c = 14 -> agreement: true
+  ST5: |G| = 120, letters = 4, max NF length = 6, minimal rules = 66; brute force WA = 24, diff1c = 32, diff2c = 57 (0.01 s); kbmag WA = 24, diff1 = 32, diff2c = 57 -> agreement: true
+  ST6: |G| = 720, letters = 5, max NF length = 7, minimal rules = 369; brute force WA = 67, diff1c = 115, diff2c = 310 (0.04 s); kbmag WA = 67, diff1 = 115, diff2c = 310 -> agreement: true
+  CT4: |G| = 24, letters = 6, max NF length = 3, minimal rules = 28; brute force WA = 6, diff1c = 18, diff2c = 18 (0.01 s); kbmag WA = 6, diff1 = 18, diff2c = 18 -> agreement: true
+  PC4: |G| = 24, letters = 3, max NF length = 4, minimal rules = 21; brute force WA = 12, diff1c = 21, diff2c = 23 (0.00 s); kbmag WA = 12, diff1 = 21, diff2c = 23 -> agreement: true
+  PC5: |G| = 120, letters = 4, max NF length = 5, minimal rules = 114; brute force WA = 38, diff1c = 84, diff2c = 100 (0.01 s); kbmag WA = 38, diff1 = 84, diff2c = 100 -> agreement: true
+  PC6: |G| = 720, letters = 5, max NF length = 7, minimal rules = 702; brute force WA = 166, diff1c = 413, diff2c = 553 (0.03 s); kbmag WA = 166, diff1 = 413, diff2c = 553 -> agreement: true
+  wda_brute.g run 2026-09-27 20:35 full: case, |G|, letters, max NF length, minimal rules; brute-force WA / diff1c / diff2c; kbmag WA / diff1 / diff2c from wda_cost.csv
+  Q6: |G| = 64, letters = 6, max NF length = 6, minimal rules = 21; brute force WA = 7, diff1c = 22, diff2c = 22 (0.04 s); kbmag WA = 7, diff1 = 22, diff2c = 22 -> agreement: true
+  Q10: |G| = 1024, letters = 10, max NF length = 10, minimal rules = 55; brute force WA = 11, diff1c = 56, diff2c = 56 (0.19 s); kbmag WA = 11, diff1 = 56, diff2c = 56 -> agreement: true
+  Q12: |G| = 4096, letters = 12, max NF length = 12, minimal rules = 78; brute force WA = 13, diff1c = 79, diff2c = 79 (0.76 s); kbmag WA = 13, diff1 = 79, diff2c = 79 -> agreement: true
+  Q14: |G| = 16384, letters = 14, max NF length = 14, minimal rules = 105; brute force WA = 15, diff1c = 106, diff2c = 106 (3.62 s); kbmag WA = 15, diff1 = 106, diff2c = 106 -> agreement: true
+  Q16: |G| = 65536, letters = 16, max NF length = 16, minimal rules = 136; brute force WA = 17, diff1c = 137, diff2c = 137 (22.41 s); kbmag WA = 17, diff1 = 137, diff2c = 137 -> agreement: true
+  T4: |G| = 16, letters = 4, max NF length = 4, minimal rules = 12; brute force WA = 5, diff1c = 11, diff2c = 11 (0.01 s); kbmag WA = 5, diff1 = 11, diff2c = 11 -> agreement: true
+  T8: |G| = 64, letters = 4, max NF length = 8, minimal rules = 12; brute force WA = 13, diff1c = 15, diff2c = 15 (0.01 s); kbmag WA = 13, diff1 = 15, diff2c = 15 -> agreement: true
+  T14: |G| = 196, letters = 4, max NF length = 14, minimal rules = 12; brute force WA = 25, diff1c = 21, diff2c = 21 (0.01 s); kbmag WA = 25, diff1 = 21, diff2c = 21 -> agreement: true
+  T50: |G| = 2500, letters = 4, max NF length = 50, minimal rules = 12; brute force WA = 97, diff1c = 57, diff2c = 57 (0.12 s); kbmag WA = 97, diff1 = 57, diff2c = 57 -> agreement: true
+  T100: |G| = 10000, letters = 4, max NF length = 100, minimal rules = 12; brute force WA = 197, diff1c = 107, diff2c = 107 (0.66 s); kbmag WA = 197, diff1 = 107, diff2c = 107 -> agreement: true
+  BS5: |G| = 120, letters = 4, max NF length = 10, minimal rules = 13; brute force WA = 11, diff1c = 11, diff2c = 14 (0.00 s); kbmag WA = 11, diff1 = 11, diff2c = 14 -> agreement: true
+  BS7: |G| = 5040, letters = 6, max NF length = 21, minimal rules = 31; brute force WA = 22, diff1c = 22, diff2c = 27 (0.19 s); kbmag WA = 22, diff1 = 22, diff2c = 27 -> agreement: true
+  BS8: |G| = 40320, letters = 7, max NF length = 28, minimal rules = 43; brute force WA = 29, diff1c = 29, diff2c = 35 (2.14 s); kbmag WA = 29, diff1 = 29, diff2c = 35 -> agreement: true
+  ST7: |G| = 5040, letters = 6, max NF length = 9, minimal rules = 2329; brute force WA = 191, diff1c = 524, diff2c = 1966 (0.21 s); kbmag WA = 191, diff1 = 524, diff2c = 1966 -> agreement: true
+  PC7: |G| = 5040, letters = 6, max NF length = 8, minimal rules = 4823; brute force WA = 904, diff1c = 2322, diff2c = 3408 (0.15 s); kbmag WA = 904, diff1 = 2322, diff2c = 3408 -> agreement: true
+  ST8: |G| = 40320, letters = 7, max NF length = 10, minimal rules = 16799; brute force WA = 545, diff1c = 2855, diff2c = 13359 (2.18 s); kbmag: no successful run
+  PC8: |G| = 40320, letters = 7, max NF length = 9, minimal rules = 37964; brute force WA = 5671, diff1c = 15515, diff2c = 24460 (2.17 s); kbmag: no successful run

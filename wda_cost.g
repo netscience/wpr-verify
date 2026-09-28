@@ -9,6 +9,16 @@
 ##  Requirements: GAP >= 4.12 with the kbmag package (tested: GAP 4.15.1,
 ##  kbmag 1.5.11, macOS/arm64).
 ##
+##  Files in this directory:
+##    wda_cost.g      this script (measurement + report)
+##    run_wda.py      driver: one GAP process per case under a wall-clock cap
+##    build_patch.sh  builds kbmag_patch/bin (patched gpaxioms/autgroup)
+##    wda_verify.g    independent check of the word acceptors (BFS normal forms)
+##    wda_wacheck.g   same check for acceptor files in kbmag_out/ (ST8, PC8)
+##    wda_brute.g     WA / diff1c / diff2c sizes computed without kbmag
+##    wda_cost.csv    raw results (one row per attempt), wda_cost.txt: report
+##    wda_verify.txt, wda_brute.txt: outputs of the checks; logs/: per-case logs
+##
 ##  Usage (run from this directory, stdin from /dev/null):
 ##
 ##    WDA_CASE=list   gap -q -b wda_cost.g < /dev/null   # list case ids
@@ -476,7 +486,7 @@ end;
 ##  Report: wda_cost.txt from wda_cost.csv (last row per case, case order)
 #############################################################################
 WDA_Report := function()
-  local rows, last, r, c, out, cols, widths, line, i, v, machine, s, cap, sel;
+  local rows, last, r, c, out, cols, widths, line, i, v, s, cap, sel;
   if not IsExistingFile(WDA_CSV) then Print("no ", WDA_CSV, "\n"); return; fi;
   rows := ReadCSV(WDA_CSV);
   last := rec();
@@ -555,6 +565,29 @@ WDA_Report := function()
   for c in WDA_CASES do
     if IsBound(last.(c.id)) and IsBound(last.(c.id).notes) then
       Append(out, Concatenation("  ", c.id, ": ", String(last.(c.id).notes), "\n"));
+    fi;
+  od;
+  Append(out, "\nCases kbmag did not complete (ST8, PC8; see kbmag_out/*.pipeline.log)\n");
+  Append(out, "  ST8: AutomaticStructure returns false (default and large): Knuth-Bendix completes with a confluent system of\n");
+  Append(out, "       16799 rules (60 s), kbprog's diff1/diff2 have 2855/4278 states and gpmakefsa builds the 545-state word\n");
+  Append(out, "       acceptor, but the general multiplier keeps being found incorrect (word differences missing from diff2) and\n");
+  Append(out, "       gpmakefsa stops at kbmag's word-difference limit; with the limit raised to 200000 (kbmag_patch/bin) it was\n");
+  Append(out, "       still adding word differences after 25 min (multiplier > 47000 states) and was stopped.\n");
+  Append(out, "  PC8: Knuth-Bendix exceeds maxeqns (32767) with the defaults; with large + maxwdiffs 200000 it completes with a\n");
+  Append(out, "       confluent system of 37964 rules (375 s), diff1/diff2 with 15515/19089 states, and gpmakefsa then crashes\n");
+  Append(out, "       (SIGBUS) building the word acceptor from diff2; with -diff1 it builds the 5671-state word acceptor but\n");
+  Append(out, "       did not finish the multiplier within the time budget.\n");
+  Append(out, "  The word acceptors kbmag wrote for both cases (kbmag_out/ST8.wa, PC8.wa) accept exactly the 40320 shortlex\n");
+  Append(out, "  normal forms (wda_wacheck.g), and wda_brute.g computes WA / diff1c / diff2c for them without kbmag:\n");
+  Append(out, "       ST8: WA = 545, diff1c = 2855, diff2c = 13359;   PC8: WA = 5671, diff1c = 15515, diff2c = 24460.\n");
+  Append(out, "  (wda_brute.g reproduces kbmag's WA, diff1 and diff2c exactly on all 30 completed cases, see below.)\n");
+  for s in [ ["wda_verify.txt", "Independent verification of the word acceptors (wda_verify.g, wda_wacheck.g)"],
+             ["wda_brute.txt", "Brute-force WA / diff1c / diff2c without kbmag (wda_brute.g)"] ] do
+    if IsExistingFile(Filename(WDA_DIR, s[1])) then
+      Append(out, Concatenation("\n", s[2], "\n"));
+      for line in SplitString(StringFile(Filename(WDA_DIR, s[1])), "\n") do
+        if line <> "" then Append(out, Concatenation("  ", line, "\n")); fi;
+      od;
     fi;
   od;
   FileString(WDA_TXT, out);
