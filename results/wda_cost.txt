@@ -1,0 +1,91 @@
+Shortlex automatic structures of the Cayley-graph groups (GAP 4.15.1 + kbmag 1.5.11)
+Architecture: aarch64-apple-darwin25-default64-kv10
+Machine: Apple M4; Darwin 25.2.0 arm64; run started 2026-09-27 19:57:07
+Wall-clock cap per computation: 600 s.  Script: wda_cost.g (driver run_wda.py); raw data: wda_cost.csv; logs: logs/
+kbmag temporary files are written to the short relative path wdatmp/<case>: with GAP's default
+temporary path (~70 characters) the gpaxioms program overflows its 100-byte file-name buffers on
+relators of length >~ 25 and AutomaticStructure returns false (observed for Borel(47,23), T50, T100).
+Rows marked [patched gpaxioms] were computed with kbmag_patch/bin (gpaxioms rebuilt from the package
+sources with 4096-byte buffers by build_patch.sh; needed for relator sides of >= ~45 letters, i.e. T100).
+
+case     family                        n=|G|  |S|  alph  success  WA   diff1  diff2  diff2c  GM     seconds  t_autgroup  large  mwd  sizeOK  
+---------------------------------------------------------------------------------------------------------------------------------------------
+Q4       hypercube Q_k                    16    4     4  true       5     11     11      11     21     0.08        0.05  false       true    
+Q6       hypercube Q_k                    64    6     6  true       7     22     22      22     43     0.08        0.03  false       true    
+Q8       hypercube Q_k                   256    8     8  true       9     37     37      37     73     0.10        0.04  false       true    
+Q10      hypercube Q_k                  1024   10    10  true      11     56     56      56    111     0.18        0.10  false       true    
+Q12      hypercube Q_k                  4096   12    12  true      13     79     79      79    157     0.61        0.49  false       true    
+Q14      hypercube Q_k                 16384   14    14  true      15    106    106     106    211     3.14        2.98  false       true    
+Q16      hypercube Q_k                 65536   16    16  true      17    137    137     137    273    18.85       18.71  false       true    
+T4       torus Z_m x Z_m                  16    2     4  true       5     11     11      11     25     0.06        0.03  false       true    
+T6       torus Z_m x Z_m                  36    2     4  true       9     13     13      13     41     0.08        0.04  false       true    
+T8       torus Z_m x Z_m                  64    2     4  true      13     15     15      15     57     0.08        0.05  false       true    
+T14      torus Z_m x Z_m                 196    2     4  true      25     21     21      21    105     0.11        0.07  false       true    
+T20      torus Z_m x Z_m                 400    2     4  true      37     27     27      27    153     0.12        0.08  false       true    
+T50      torus Z_m x Z_m                2500    2     4  true      97     57     57      57    393     0.29        0.25  false       true    
+T100     torus Z_m x Z_m               10000    2     4  true     197    107    107     107    793     1.31        1.27  false       true    
+C20      circulant C_20(1;2)              20    2     4  true      10     12     20      20     54     0.09        0.06  false       true    
+Borel47  Borel(47;23)                   1081    2     4  true     263    486    575     575   2203     0.88        0.67  false       true    
+BS4      bubble-sort BS(p)                24    3     3  true       7      7      9       9     26     0.07        0.04  false       true    
+BS5      bubble-sort BS(p)               120    4     4  true      11     11     14      14     55     0.09        0.05  false       true    
+BS6      bubble-sort BS(p)               720    5     5  true      16     16     20      20    101     0.11        0.07  false       true    
+ST4      star ST(p)                       24    3     3  true       9     11     14      14     42     0.08        0.05  false       true    
+ST5      star ST(p)                      120    4     4  true      24     32     57      57    230     0.15        0.11  false       true    
+ST6      star ST(p)                      720    5     5  true      67    115    310     310   1318     0.53        0.42  false       true    
+CT4      complete-transposition CT(p)     24    6     6  true       6     18     18      18     54     0.06        0.03  false       true    
+PC4      pancake PC(p)                    24    3     3  true      12     21     23      23     46     0.08        0.05  false       true    
+PC5      pancake PC(p)                   120    4     4  true      38     84    100     100    282     0.13        0.08  false       true    
+PC6      pancake PC(p)                   720    5     5  true     166    413    553     553   2051     1.10        0.90  false       true    
+BS7      bubble-sort BS(p)              5040    6     6  true      22     22     27      27    168     0.15        0.10  false       true    
+ST7      star ST(p)                     5040    6     6  true     191    524   1966    1966   9365    51.19       43.09  false       true    
+PC7      pancake PC(p)                  5040    6     6  true     904   2322   3408    3408  17029   250.93      216.08  false       true    
+BS8      bubble-sort BS(p)             40320    7     7  true      29     29     35      35    260     0.26        0.21  false       true    
+ST8      star ST(p)                    40320    7     7  false                                        64.02       63.99  true                
+PC8      pancake PC(p)                 40320    7     7  false                                         0.06        0.02  true                
+
+Columns
+  n=|G|      group order (verified by coset enumeration of the fp group, and by Size(R) = number of words accepted by the word acceptor -> sizeOK)
+  |S|        number of generators as listed in the paper; alph = size of kbmag's alphabet (S plus an inverse letter for each non-involutory generator)
+  success    true/false = return value of AutomaticStructure; timeout = killed at the cap; build-error = fp group of unexpected order
+  WA         states of WordAcceptor(R) (minimized DFA accepting the shortlex normal forms)
+  diff1      states of FirstWordDifferenceAutomaton(R) = kbmag file .diff1c, the correct minimal first word-difference machine (word differences of the minimal confluent rewriting system), output of gpminkb
+  diff2      states of SecondWordDifferenceAutomaton(R) = kbmag file .diff2, the second word-difference machine of kbprog -wd (closed under inversion, all transitions) as corrected by gpmakefsa; may contain unneeded differences
+  diff2c     states of the correct minimal second word-difference machine (file .diff2c written by gpminkb; not exposed by the GAP interface, read from the temporary file)
+  GM         states of the general multiplier automaton (file .gm)
+  seconds    wall-clock time of the AutomaticStructure(R[, large]) call (autgroup + gpminkb + GAP reading the automata files); t_autgroup = wall clock of the autgroup program alone (kbprog -wd, gpmakefsa, gpaxioms), i.e. the automatic structure computation proper
+  large      true if the row comes from AutomaticStructure(R, true)
+  mwd        word-difference limit passed to kbprog (options record) and gpmakefsa (-mwd, via the patched autgroup script) when kbmag's defaults were exceeded; empty = defaults
+
+Notes per case
+  Q4: [patched gpaxioms] (Z_2)^4; standard basis
+  Q6: [patched gpaxioms] (Z_2)^6; standard basis
+  Q8: [patched gpaxioms] (Z_2)^8; standard basis
+  Q10: [patched gpaxioms] (Z_2)^10; standard basis
+  Q12: [patched gpaxioms] (Z_2)^12; standard basis
+  Q14: [patched gpaxioms] (Z_2)^14; standard basis
+  Q16: [patched gpaxioms] (Z_2)^16; standard basis
+  T4: [patched gpaxioms] Z_4 x Z_4 = <a;b | a^m; b^m; [a;b]>
+  T6: [patched gpaxioms] Z_6 x Z_6 = <a;b | a^m; b^m; [a;b]>
+  T8: [patched gpaxioms] Z_8 x Z_8 = <a;b | a^m; b^m; [a;b]>
+  T14: [patched gpaxioms] Z_14 x Z_14 = <a;b | a^m; b^m; [a;b]>
+  T20: [patched gpaxioms] Z_20 x Z_20 = <a;b | a^m; b^m; [a;b]>
+  T50: [patched gpaxioms] Z_50 x Z_50 = <a;b | a^m; b^m; [a;b]>
+  T100: [patched gpaxioms] Z_100 x Z_100 = <a;b | a^m; b^m; [a;b]>
+  C20: [patched gpaxioms] Z_20 = <a;b | a^20; a^2 = b>  (C_20(1;2))
+  Borel47: [patched gpaxioms] Z_47 x| Z_23 = <x;y | x^23; y^47; x y x^-1 = y^2>
+  BS4: [patched gpaxioms] Sym_4; adjacent transpositions; Coxeter presentation A_3
+  BS5: [patched gpaxioms] Sym_5; adjacent transpositions; Coxeter presentation A_4
+  BS6: [patched gpaxioms] Sym_6; adjacent transpositions; Coxeter presentation A_5
+  ST4: [patched gpaxioms] Sym_4; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
+  ST5: [patched gpaxioms] Sym_5; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
+  ST6: [patched gpaxioms] Sym_6; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
+  CT4: [patched gpaxioms] Sym_4; all transpositions; presentation via IsomorphismFpGroupByGenerators
+  PC4: [patched gpaxioms] Sym_4; prefix reversals r_2..r_4; presentation via IsomorphismFpGroupByGenerators
+  PC5: [patched gpaxioms] Sym_5; prefix reversals r_2..r_5; presentation via IsomorphismFpGroupByGenerators
+  PC6: [patched gpaxioms] Sym_6; prefix reversals r_2..r_6; presentation via IsomorphismFpGroupByGenerators
+  BS7: [patched gpaxioms] Sym_7; adjacent transpositions; Coxeter presentation A_6
+  ST7: [patched gpaxioms] Sym_7; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
+  PC7: [patched gpaxioms] Sym_7; prefix reversals r_2..r_7; presentation via IsomorphismFpGroupByGenerators
+  BS8: [patched gpaxioms] Sym_8; adjacent transpositions; Coxeter presentation A_7
+  ST8: [patched gpaxioms] Sym_8; star transpositions (1 i); presentation via IsomorphismFpGroupByGenerators
+  PC8: [patched gpaxioms] Sym_8; prefix reversals r_2..r_8; presentation via IsomorphismFpGroupByGenerators

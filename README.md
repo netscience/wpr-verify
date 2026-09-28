@@ -6,58 +6,97 @@ Companion code for
 > *Word-Processing-based Routing: A Fault-tolerant Routing Scheme for Cayley
 > Graphs*.
 
-It reproduces results reported in tables 5, 8 and 9 of the paper.
+It reproduces every figure reported in the tables of the paper.
+
+Version 2.0.0 (revised manuscript). Archived on Zenodo under the concept DOI
+[10.5281/zenodo.21929582](https://doi.org/10.5281/zenodo.21929582); see
+`CITATION.cff` for how to cite the code and the paper, and `CHANGELOG.md` for
+what changed since version 1.
 
 ## Contents
 
 | File | Purpose | Requires |
 |---|---|---|
-| `wpr_verify.py` | Exhaustive verification of the routing scheme; regenerates both tables | Python ≥ 3.6, standard library only |
+| `wpr_verify.py` | Single node failure: locality of failure records, exhaustive routing verification and control-plane cost (Tables 5, 8 and 9) | Python ≥ 3.6, standard library only |
+| `wpr_faults.py` | Library: failure tables for node **and** link failures, notification of Algorithms 5–8 simulated in synchronous rounds (sequential or concurrent failures), the two forwarding rules (original submission / revised, with failure trace) and a greedy failure-oblivious baseline | Python ≥ 3.6 |
+| `wpr_experiments.py` | The experiments added in the revision: two failures (exhaustive), *k* concurrent failures, minimality mitigation (affected set, blind-spot radius, probe radius, courtesy hops), large instances, the RCRR scenario on the Borel graph, greedy baseline | Python ≥ 3.6 |
 | `edge_transitivity.g` | Rigorous edge-transitivity check via automorphism groups | GAP ≥ 4.15 with GRAPE |
+| `wda_cost.g` | Size of the shortLex automatic structure (word acceptor, word-difference automata) of each group, and the time to compute it | GAP ≥ 4.15 with kbmag |
 
 ## Running
-#### Python version
 
-`wpr_verify.py` needs **Python 3.6 or later**.
-
-No packages need to be installed: the script imports only from the standard
-library, which keeps it reproducible for reviewers and readers.
+No packages need to be installed for the Python scripts: they import only from
+the standard library, which keeps them reproducible for reviewers and readers.
 
 ```bash
-python3 wpr_verify.py --self-test      # verify against the published figures
-python3 wpr_verify.py                  # print both tables
-python3 wpr_verify.py --table locality
-python3 wpr_verify.py --table verification
+python3 wpr_verify.py --self-test      # verify Tables 5, 8, 9 against the published figures
+python3 wpr_verify.py                  # print those tables
 python3 wpr_verify.py --latex          # emit LaTeX tabular rows
+
+python3 wpr_experiments.py two-failures            # Table: two node failures, exhaustive
+python3 wpr_experiments.py two-failures --links    # a node and a link failure
+python3 wpr_experiments.py k-failures --sets 20    # Table: k concurrent node failures
+python3 wpr_experiments.py k-failures --links      # k concurrent link failures
+python3 wpr_experiments.py mitigation              # Table: affected set, rho*, radius / courtesy hops
+python3 wpr_experiments.py large --pairs 10000 --destinations 50   # Table: 10^4 - 3.6x10^5 nodes
+python3 wpr_experiments.py borel --sets 20 --pairs 5000 --destinations 100   # Table: RCRR scenario
+python3 wpr_experiments.py greedy                  # Table: WPR vs greedy, single failure
 ```
 
-The self-test finishes in well under a second and prints
-`published figures reproduced` when the computed values match those in the
-paper. Two further options explore the strengthened control plane discussed in
-the paper:
-
-```bash
-python3 wpr_verify.py --table verification --radius 2 --courtesy-hops 1
-```
-
-`--radius 2` widens the recording criterion of Algorithm 5 to destinations
-within distance two of the failure; `--courtesy-hops 1` relays each
-notification one hop past the last updating node. Together they restore
-minimal routing on every family tested, at a modest cost in failure-table size.
+Every experiment accepts `--csv DIR` (write a CSV next to the text table),
+`--latex` (LaTeX rows), `--families ...` (restrict to some graphs) and
+`--seed` (the sampled experiments are pseudo-random with a fixed default
+seed, so they are reproducible). The single-failure self-test finishes in a
+few seconds; the complete set of experiments of the paper takes about one hour
+on a laptop, the Borel sweep being the longest.
 
 ## What is verified
 
-For each Cayley graph a single node failure is introduced. The notification
-process of Algorithms 7–8 runs, with each notified node applying the recording
-criterion of Algorithm 5 and relaying only when its own table changes. Then
-**every ordered pair** of surviving nodes is routed with Algorithms 11–12, and
-the hop count is compared against the true distance in $\Gamma\setminus F$. No sampling is
-involved — for `BS(5)` and `ST(5)` that is $14042$ pairs each.
+**Single failure (`wpr_verify.py`).** For each Cayley graph a single node
+failure is introduced. The notification process of Algorithms 7–8 runs, with
+each notified node applying the recording criterion of Algorithm 5 and
+relaying only when its own table changes. Then **every ordered pair** of
+surviving nodes is routed with Algorithms 11–12, and the hop count is compared
+against the true distance in Γ \ F. No sampling is involved — for `BS(5)` and
+`ST(5)` that is 14 042 pairs each. Because Cayley graphs are vertex-transitive,
+and the shortLex order is invariant under left translation, the result does
+not depend on which node fails; the identity is used throughout. Under a
+single failure the forwarding rule of the original submission and the revised
+rule with failure trace visit exactly the same nodes, so these tables are
+unaffected by the revision.
 
-Because Cayley graphs are vertex-transitive, and the shortLex order is
-invariant under left translation (the word joining `u` and `v` depends only on
-`u⁻¹v`), the result does not depend on which node is chosen to fail. The
-identity is used throughout.
+**Several failures (`wpr_faults.py`, `wpr_experiments.py`).** Failure elements
+are nodes and links. Each node keeps a table of both; a notification is
+processed with Algorithms 5–6 (node and link criteria, including the
+bookkeeping that turns a fully isolated node into a node record) and relayed
+with Algorithms 7–8, including the lines by which a node that records a
+failure also evaluates the failures known to its notifier. The notification is
+simulated in synchronous rounds, so that the notifications of several
+failures can overlap (`concurrent` model) or be run one after the other
+(`sequential` model). Messages are then routed with
+
+* `original`: Algorithms 11–12 as originally submitted — a node with a
+  non-empty table recomputes the path from its own table;
+* `trace`: the revised rule — the header carries the set *B* of failures the
+  current path avoids; a node recomputes only when its table is not contained
+  in *B*, and then avoids *B* ∪ *T*.
+
+and, for reference, with a failure-oblivious greedy rule (forward to the alive
+neighbour closest to the destination in the failure-free graph, i.e. the
+behaviour of the RPS and GRWMS schemes). Loops are detected by state
+repetition; a hop into a failed element counts as a loss.
+
+The `mitigation` experiment computes, for a single failure, the set of
+*affected* nodes (those whose first hop towards some destination changes),
+the *blind-spot radius* ρ\* (the smallest probe radius that lets every affected
+node see a witness), the criterion set and the notified set, and it re-runs
+the notification with a wider probe radius (`--radius`) and courtesy hops
+(`--courtesy-hops`, extra relays past the last updating node). Minimal routing
+for every pair holds exactly when the notified set contains the affected set
+(Proposition 1 of the paper). Note that ρ\* = 2 in the Bubble-sort graphs and
+grows with the side length in square tori (ρ\* = 5 for 14×14), so
+`--radius 2 --courtesy-hops 1` restores minimality on the eleven families of
+Table 8 but not on every family: `--radius` must be at least ρ\*.
 
 ## Edge-transitivity
 
@@ -70,25 +109,38 @@ nauty) and tests whether it acts transitively on the edge set:
 gap -q edge_transitivity.g
 ```
 
-This is a separate tool on purpose. $Aut(\Gamma)$ can be strictly larger than the
+This is a separate tool on purpose. Aut(Γ) can be strictly larger than the
 group of automorphisms of G preserving S, so a group-theoretic shortcut would
-not be sound, and a local invariant such as counting short cycles per edge can
-only ever certify *non*-equivalence, never equivalence.
+not be sound.
+
+## Automaton sizes
+
+`wda_cost.g` builds the finitely presented group behind each Cayley graph,
+computes its shortLex automatic structure with kbmag and reports the number of
+states of the word acceptor, of the first and second word-difference automata
+and of the general multiplier, together with the computation time (Table on
+the cost of the WDA in the paper). `run_wda.py` drives it case by case with a
+wall-clock cap and collects `results/wda_cost.csv` / `results/wda_cost.txt`:
+
+```bash
+python3 run_wda.py            # or: gap -q -b wda_cost.g < /dev/null
+```
+
+Two practical notes. kbmag writes its temporary files under the path given by
+GAP's temporary directory; with a long path (about 70 characters, the macOS
+default) the `gpaxioms` program overflows its fixed 100-byte file-name buffers
+on relators of more than ~25 letters and `AutomaticStructure` returns `false`.
+The driver therefore points kbmag to the short relative directory `wdatmp/`.
+For the largest relators (the $100\times100$ torus, whose relators have 100
+letters) `gpaxioms` had to be rebuilt from the package sources with larger
+buffers; the runs affected are marked in `wda_cost.txt`. The word-difference
+automaton used by the path-computation algorithms is the second one
+(`SecondWordDifferenceAutomaton`, kbmag file `.diff2`); every group order was
+checked against the number of words accepted by the word acceptor.
 
 ## Adding a family
 
-Graph constructors return a `CayleyGraph` and compose freely:
-
-```python
-from wpr_verify import CayleyGraph, verification
-
-def my_graph(n):
-    return CayleyGraph("MyCG(%d)" % n, list(range(n)),
-                       [lambda g: (g + 1) % n, lambda g: (g - 1) % n])
-
-print(verification(my_graph(30)))
-```
-
-Generator index order **is** the alphabet order used by shortLex, so listing
-the actions in a different order gives a different (equally valid) shortLex
-language.
+Graph constructors in `wpr_verify.py` return a `CayleyGraph` and compose
+freely: give the list of group elements and, for each generator in alphabet
+order, the function that applies it. The generator order *is* the
+lexicographic order used by shortLex.

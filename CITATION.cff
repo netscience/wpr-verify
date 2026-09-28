@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite both the software and the paper."
+type: software
+title: "wpr-verify: verification code for the Word-Processing-based Routing (WPR) scheme"
+version: 2.0.0
+date-released: 2026-09-28
+license: MIT
+repository-code: "https://github.com/netscience/wpr-verify"
+doi: 10.5281/zenodo.21929582
+authors:
+  - family-names: Aguirre-Guerrero
+    given-names: Daniela
+    affiliation: "Universidad Autónoma Metropolitana, Unidad Cuajimalpa, Mexico"
+  - family-names: Fàbrega
+    given-names: Lluís
+    affiliation: "Universitat de Girona, Spain"
+  - family-names: Vilà
+    given-names: Pere
+    affiliation: "Universitat de Girona, Spain"
+keywords:
+  - Cayley graphs
+  - fault-tolerant routing
+  - interconnection networks
+  - distributed algorithms
+  - automatic groups
+preferred-citation:
+  type: article
+  title: "Word-Processing-based Routing: A Fault-tolerant Routing Scheme for Cayley Graphs"
+  authors:
+    - family-names: Aguirre-Guerrero
+      given-names: Daniela
+    - family-names: Fàbrega
+      given-names: Lluís
+    - family-names: Vilà
+      given-names: Pere
+  journal: "Scientific Reports"
+  year: 2026
+  notes: "Under revision."
