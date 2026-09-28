@@ -9,7 +9,7 @@ Companion code for
 It reproduces every figure reported in the tables of the paper.
 
 Version 2.0.0 (revised manuscript). Archived on Zenodo under the concept DOI
-[10.5281/zenodo.21929582](https://doi.org/10.5281/zenodo.21929582); see
+[10.5281/zenodo.21929581](https://doi.org/10.5281/zenodo.21929581); see
 `CITATION.cff` for how to cite the code and the paper, and `CHANGELOG.md` for
 what changed since version 1.
 
