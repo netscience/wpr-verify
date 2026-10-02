@@ -112,7 +112,7 @@ def pct(a, b):
 def exp_two_failures(args):
     cols = ["graph", "n", "model", "rule", "f2 cases", "pairs", "lost",
             "loops", "loop %", "non-min", "non-min %", "stretch max",
-            "comp/msg", "header max"]
+            "comp/msg", "header max", "trace mean"]
     out = Out(args, "two_failures", cols)
     for g in build(args.families or TABLE8):
         oracle = F.Oracle(g)
@@ -157,7 +157,8 @@ def exp_two_failures(args):
                          s["loops"], pct(s["loops"], s["pairs"]), s["nonmin"],
                          pct(s["nonmin"], s["pairs"]), s["stretch_max"],
                          (s["comp_sum"] / delivered) if (delivered and rule != "greedy") else 0.0,
-                         s["header_max"]])
+                         s["header_max"],
+                         (s["trace_sum"] / s["pairs"]) if s["pairs"] else 0.0])
         if not args.latex:
             print("   [%s: %.1f s]" % (g.name, time.time() - t0))
     out.close()
@@ -172,7 +173,7 @@ def exp_k_failures(args):
             "orig lost", "orig loops", "orig loop %", "trace lost",
             "trace loops", "trace non-min %", "trace stretch mean",
             "trace stretch max", "trace comp/msg", "header max",
-            "greedy delivered %"]
+            "greedy delivered %", "trace mean"]
     out = Out(args, "k_failures", cols)
     fractions = args.fractions or [0.01, 0.02, 0.05, 0.10]
     for g in build(args.families or TABLE8):
@@ -216,7 +217,8 @@ def exp_k_failures(args):
                      t["stretch_max"],
                      (t["comp_sum"] / deliv_t) if deliv_t else 0.0,
                      t["header_max"],
-                     pct(gr["pairs"] - gr["lost"] - gr["loops"], gr["pairs"])])
+                     pct(gr["pairs"] - gr["lost"] - gr["loops"], gr["pairs"]),
+                     t["trace_sum"] / t["pairs"]])
             if not args.latex:
                 print("   [%s k=%d: %.1f s]" % (g.name, k, time.time() - t0))
     out.close()
@@ -352,7 +354,7 @@ def exp_borel(args):
             "disconnected pairs %", "orig delivered %", "orig loops %",
             "trace delivered %", "trace non-min %", "trace stretch mean",
             "trace comp/msg", "header max", "greedy delivered %",
-            "notified mean", "msgs mean", "rounds mean"]
+            "notified mean", "msgs mean", "rounds mean", "trace mean"]
     out = Out(args, "borel", cols)
     g = W.borel(47, 23)
     oracle = F.Oracle(g)
@@ -384,6 +386,7 @@ def exp_borel(args):
                     pairs.append((s, t))
             st = F.audit(g, oracle, failures, tables, pairs)
             totals = F.merge(totals, st)
+            oracle.cache.clear()             # bound memory; results unaffected
         o, t, gr = totals["original"], totals["trace"], totals["greedy"]
         deliv_t = t["pairs"] - t["lost"] - t["loops"]
         out.row([g.name, g.n, len(links), pc, args.sets, t["pairs"],
@@ -395,7 +398,7 @@ def exp_borel(args):
                  (t["comp_sum"] / deliv_t) if deliv_t else 0.0, t["header_max"],
                  pct(gr["pairs"] - gr["lost"] - gr["loops"], gr["pairs"]),
                  notified_sum / args.sets, msgs_sum / args.sets,
-                 rounds_sum / args.sets])
+                 rounds_sum / args.sets, t["trace_sum"] / t["pairs"]])
         if not args.latex:
             print("   [%d%%: %.1f s]" % (pc, time.time() - t0))
     out.close()

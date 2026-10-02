@@ -15,10 +15,12 @@ This module adds what the revised version of the paper needs:
     recording criteria of Algorithms 5-6 and relayed by Algorithms 7-8; the
     notification is simulated in synchronous rounds so that the notifications
     of several failures can overlap (concurrent failure model);
-  * two forwarding rules: the published Algorithms 11-12 ("original"), and the
-    revised rule in which the message header also carries the set A of
-    failures avoided by the path it holds; a node recomputes only when its
-    table is not contained in A and then avoids A := A U T_u ("trace");
+  * two forwarding rules: the table-only rule of Remark 1 of the paper
+    ("original"; version 1 of this code), and the revised rule ("trace") in which the message header
+    also carries a failure trace B; a node acts only when an element of its
+    table blocks the path still to be followed, adds the blocking elements to
+    B and recomputes the path avoiding B (a variant that adds the whole table,
+    "trace-full", is kept for comparison);
   * a greedy, failure-oblivious baseline reproducing the behaviour of the RPS
     and GRWMS schemes (forward to the alive neighbour closest to the
     destination in the failure-free graph).
@@ -125,7 +127,7 @@ class ShortLexF(object):
 
     def first_letter(self, u, v):
         """Index of the first generator of the shortLex path u -> v; None if
-        no path exists (the symbol bot of the paper); EMPTY if u == v."""
+        no path exists (the empty word e_A of the paper); EMPTY if u == v."""
         if u in self.nodes or v in self.nodes:
             return None
         d = self.dist_to(v)
@@ -348,15 +350,47 @@ def tables_after(graph, oracle, failures, model, radius=1, courtesy=0,
 # Forwarding
 # ---------------------------------------------------------------------------
 
+def path_elements(graph, cur, word):
+    """Failure elements traversed by the path that `word` describes from
+    `cur`: the nodes it visits (cur excluded) and the links it uses."""
+    elems = set()
+    x = cur
+    for i in word:
+        y = graph.adj[x][i]
+        elems.add(link(x, y))
+        elems.add(y)
+        x = y
+    return elems
+
+
+def blocking(graph, table, cur, word):
+    """Elements of a failure table that lie on the path `word` from `cur`
+    (the elements that block it)."""
+    if not table or not word:
+        return frozenset()
+    on_path = path_elements(graph, cur, word)
+    return frozenset(x for x in table if x in on_path)
+
+
 def route(graph, oracle, src, dst, tables, failures, rule="trace",
           max_hops=None):
     """Forward one message from src to dst.
 
-    rule = "original": Algorithms 11-12 as published (a node with a non-empty
-                       table recomputes the path avoiding its own table).
-    rule = "trace":    the header carries the set A of failures avoided by
-                       the path it holds; a node recomputes only when its
-                       table is not contained in A, and avoids A U T_u.
+    rule = "original":   the table-only rule of Remark 1 of the paper (a node with
+                         a non-empty table recomputes the path avoiding its own
+                         table only).
+    rule = "trace":      the revised rule (Algorithms 11-12 of the revision).
+                         The header carries a failure trace B.  A node u
+                         (the source included, which starts from the
+                         failure-free shortLex path and B = {}) acts only if
+                         some element of its table T_u lies on the path still
+                         to be followed; it then adds those blocking elements
+                         to B and recomputes the path avoiding B, and repeats
+                         until the path avoids T_u.  Elements of T_u that do
+                         not block the path are not added to B.
+    rule = "trace-full": variant in which a node recomputes whenever T_u is
+                         not contained in B and adds its whole table to B
+                         (kept for comparison).
 
     Returns a dict with: status ("ok", "lost" or "loop"), hops, computations
     (number of shortLex computations, the source's included), and header_max
@@ -366,7 +400,7 @@ def route(graph, oracle, src, dst, tables, failures, rule="trace",
     """
     max_hops = max_hops or 4 * graph.n
     down_nodes, down_links = split(failures)
-    trace = (rule == "trace")
+    counters = dict(computations=0, header_max=0)
 
     def hop(cur, i):
         y = graph.adj[cur][i]
@@ -374,54 +408,73 @@ def route(graph, oracle, src, dst, tables, failures, rule="trace",
             return None
         return y
 
-    A = tables[src]
-    word = oracle.sl(A).path(src, dst)
-    computations, header_max = 1, len(A)
+    def decide(cur, A, word, at_source):
+        """Path decision of node `cur` holding trace A and remaining path
+        `word` (None at the source).  Returns (A, word); word is None when no
+        path avoiding A exists."""
+        t = tables[cur]
+        if rule == "original":
+            if at_source or t:
+                counters["computations"] += 1
+                return t, oracle.sl(t).path(cur, dst)
+            return A, word
+        if rule == "trace-full":
+            if at_source or not t <= A:
+                A = A | t
+                counters["computations"] += 1
+                return A, oracle.sl(A).path(cur, dst)
+            return A, word
+        # rule == "trace"
+        if at_source:
+            counters["computations"] += 1
+            word = oracle.clean.path(cur, dst)
+            if word is None:
+                return A, None
+        if t <= A:                       # nothing in T_u can block the path
+            return A, word
+        X = blocking(graph, t, cur, word)
+        while X:
+            A = A | X
+            counters["computations"] += 1
+            word = oracle.sl(A).path(cur, dst)
+            if word is None:
+                return A, None
+            X = blocking(graph, t, cur, word)
+        return A, word
+
+    def result(status, hops, A):
+        counters["header_max"] = max(counters["header_max"], len(A))
+        return dict(status=status, hops=hops, trace=len(A), **counters)
+
+    A, word = decide(src, frozenset(), None, True)
+    counters["header_max"] = len(A)
     if word is None:
-        return dict(status="lost", hops=0, computations=computations,
-                    header_max=header_max)
+        return result("lost", 0, A)
+    if not word:
+        return result("ok" if src == dst else "lost", 0, A)
     nxt = hop(src, word[0])
     if nxt is None:
-        return dict(status="lost", hops=1, computations=computations,
-                    header_max=header_max)
+        return result("lost", 1, A)
     cur, header, hops = nxt, word[1:], 1
     history = set()
     while hops < max_hops:
         if not header:
-            return dict(status="ok" if cur == dst else "lost", hops=hops,
-                        computations=computations, header_max=header_max)
-        t = tables[cur]
-        if trace:
-            recompute = not t <= A
-            if recompute:
-                A = A | t
-        else:
-            recompute = bool(t)
-            if recompute:
-                A = t
-        if recompute:
-            computations += 1
-            header_max = max(header_max, len(A))
-            word = oracle.sl(A).path(cur, dst)
-            if word is None:
-                return dict(status="lost", hops=hops, computations=computations,
-                            header_max=header_max)
-            i, header = word[0], word[1:]
-        else:
-            i, header = header[0], header[1:]
+            return result("ok" if cur == dst else "lost", hops, A)
+        A, word = decide(cur, A, header, False)
+        counters["header_max"] = max(counters["header_max"], len(A))
+        if word is None:
+            return result("lost", hops, A)
+        i, header = word[0], word[1:]
         nxt = hop(cur, i)
         if nxt is None:
-            return dict(status="lost", hops=hops + 1, computations=computations,
-                        header_max=header_max)
+            return result("lost", hops + 1, A)
         cur = nxt
         hops += 1
         state = (cur, header, A)
         if state in history:
-            return dict(status="loop", hops=hops, computations=computations,
-                        header_max=header_max)
+            return result("loop", hops, A)
         history.add(state)
-    return dict(status="loop", hops=hops, computations=computations,
-                header_max=header_max)
+    return result("loop", hops, A)
 
 
 def route_greedy(graph, oracle, src, dst, failures, max_hops=None):
@@ -471,12 +524,14 @@ def audit(graph, oracle, failures, tables, pairs, rules=("original", "trace"),
     Returns {rule: stats} with stats = pairs, lost, loops, nonmin (delivered
     over a path longer than the distance in Gamma\\F), stretch_max,
     stretch_sum (extra hops summed over delivered messages), hops_sum,
-    comp_sum (shortLex computations), header_max; and, if `greedy`, the same
+    comp_sum (shortLex computations), header_max, trace_sum (size of the
+    failure trace on arrival, summed over messages); and, if `greedy`, the same
     counters for the greedy baseline under key "greedy"."""
     truth = oracle.sl(failures)
     keys = list(rules) + (["greedy"] if greedy else [])
     stats = {k: dict(pairs=0, lost=0, loops=0, nonmin=0, stretch_max=0,
-                     stretch_sum=0, hops_sum=0, comp_sum=0, header_max=0)
+                     stretch_sum=0, hops_sum=0, comp_sum=0, header_max=0,
+                     trace_sum=0)
              for k in keys}
     for s, t in pairs:
         d = truth.dist_to(t)[s]
@@ -500,6 +555,7 @@ def audit(graph, oracle, failures, tables, pairs, rules=("original", "trace"),
             if k != "greedy":
                 st["comp_sum"] += r["computations"]
                 st["header_max"] = max(st["header_max"], r["header_max"])
+                st["trace_sum"] += r["trace"]
     return stats
 
 
@@ -529,7 +585,7 @@ def merge(a, b):
     for k, st in b.items():
         dst = a.setdefault(k, dict(pairs=0, lost=0, loops=0, nonmin=0,
                                    stretch_max=0, stretch_sum=0, hops_sum=0,
-                                   comp_sum=0, header_max=0))
+                                   comp_sum=0, header_max=0, trace_sum=0))
         for f, v in st.items():
             if f in ("stretch_max", "header_max"):
                 dst[f] = max(dst[f], v)

@@ -243,7 +243,7 @@ class ShortLex(object):
     def first_letter(self, u, v):
         """Index of the first generator of the shortLex path u -> v.
 
-        Returns None if no path exists (the symbol bot of the paper), and
+        Returns None if no path exists (the empty word e_A of the paper), and
         EMPTY if u == v (the empty path e_A).
         """
         if u in self.banned or v in self.banned:

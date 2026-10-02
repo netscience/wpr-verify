@@ -8,9 +8,10 @@ Companion code for
 
 It reproduces every figure reported in the tables of the paper.
 
-Version 2.0.0 (revised manuscript), archived on Zenodo as
-[10.5281/zenodo.23005545](https://doi.org/10.5281/zenodo.23005545) (concept DOI for all
-versions: [10.5281/zenodo.21929581](https://doi.org/10.5281/zenodo.21929581)); see
+Version 2.1.0 (revised manuscript). Earlier versions are archived on Zenodo
+(version 2.0.0: [10.5281/zenodo.23005545](https://doi.org/10.5281/zenodo.23005545);
+concept DOI for all versions:
+[10.5281/zenodo.21929581](https://doi.org/10.5281/zenodo.21929581)); see
 `CITATION.cff` for how to cite the code and the paper, and `CHANGELOG.md` for
 what changed since version 1.
 
@@ -19,7 +20,7 @@ what changed since version 1.
 | File | Purpose | Requires |
 |---|---|---|
 | `wpr_verify.py` | Single node failure: locality of failure records, exhaustive routing verification and control-plane cost (Tables 5, 8 and 9) | Python ≥ 3.6, standard library only |
-| `wpr_faults.py` | Library: failure tables for node **and** link failures, notification of Algorithms 5–8 simulated in synchronous rounds (sequential or concurrent failures), the two forwarding rules (original submission / revised, with failure trace) and a greedy failure-oblivious baseline | Python ≥ 3.6 |
+| `wpr_faults.py` | Library: failure tables for node **and** link failures, notification of Algorithms 5–8 simulated in synchronous rounds (sequential or concurrent failures), the two forwarding rules (`original`: the table-only rule of Remark 1 of the paper; `trace`: the rule with failure trace of Algorithms 11–12) and a greedy failure-oblivious baseline | Python ≥ 3.6 |
 | `wpr_experiments.py` | The experiments added in the revision: two failures (exhaustive), *k* concurrent failures, minimality mitigation (affected set, blind-spot radius, probe radius, courtesy hops), large instances, the RCRR scenario on the Borel graph, greedy baseline | Python ≥ 3.6 |
 | `edge_transitivity.g` | Rigorous edge-transitivity check via automorphism groups | GAP ≥ 4.15 with GRAPE |
 | `wda_cost.g` | Size of the shortLex automatic structure (word acceptor, word-difference automata) of each group, and the time to compute it | GAP ≥ 4.15 with kbmag |
@@ -62,8 +63,7 @@ against the true distance in Γ \ F. No sampling is involved — for `BS(5)` and
 `ST(5)` that is 14 042 pairs each. Because Cayley graphs are vertex-transitive,
 and the shortLex order is invariant under left translation, the result does
 not depend on which node fails; the identity is used throughout. Under a
-single failure the forwarding rule of the original submission and the revised
-rule with failure trace visit exactly the same nodes, so these tables are
+single failure the table-only rule and the rule with failure trace visit exactly the same nodes, so these tables are
 unaffected by the revision.
 
 **Several failures (`wpr_faults.py`, `wpr_experiments.py`).** Failure elements
@@ -76,11 +76,19 @@ simulated in synchronous rounds, so that the notifications of several
 failures can overlap (`concurrent` model) or be run one after the other
 (`sequential` model). Messages are then routed with
 
-* `original`: Algorithms 11–12 as originally submitted — a node with a
+* `original`: the table-only rule (Remark 1 of the paper; version 1 of this code) — a node with a
   non-empty table recomputes the path from its own table;
-* `trace`: the revised rule — the header carries the set *B* of failures the
-  current path avoids; a node recomputes only when its table is not contained
-  in *B*, and then avoids *B* ∪ *T*.
+* `trace`: the revised rule (Algorithms 11–12 of the revised paper) — the
+  header carries a failure trace *B*. A node (the source included, which
+  starts from the failure-free shortLex path with *B* = ∅) acts only if some
+  element of its table *T* lies on the path still to be followed (a node it
+  visits or a link it traverses); it then adds those blocking elements, and
+  only those, to *B*, recomputes the path avoiding *B*, and repeats until the
+  path avoids *T*. Failures that do not affect the path never enter the header;
+* `trace-full`: a variant, kept for comparison, in which a node recomputes
+  whenever *T* is not contained in *B* and adds its whole table to *B*. It
+  follows the same routes far more often than not but carries larger headers
+  and computes more paths (this was the rule of version 2.0.0).
 
 and, for reference, with a failure-oblivious greedy rule (forward to the alive
 neighbour closest to the destination in the failure-free graph, i.e. the
